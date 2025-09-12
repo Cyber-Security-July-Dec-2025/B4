@@ -1,0 +1,12 @@
+{
+  "my_private_key": "keys/my_private.key",
+  "my_public_key": "keys/my_public.key",
+  "peer_public_key": "keys/peer_public.key",
+  "listen_ip": "0.0.0.0",
+  "listen_port": 9001,
+  "peer_ip": "127.0.0.1",
+  "peer_port": 9002,
+  "rsa_bits": 2048,
+  "aes_key_bytes": 32,
+  "aes_iv_bytes": 12
+}

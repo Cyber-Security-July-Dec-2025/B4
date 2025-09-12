@@ -1,0 +1,6 @@
+[2025-09-12 22:30:31] <b>System</b>: Listening on 127.0.0.1:9002
+[2025-09-12 22:30:33] <b>System</b>: Connecting to 127.0.0.1:9001 ...
+[2025-09-12 22:30:33] <b>System</b>: Socket connected
+[2025-09-12 22:30:36] <b>Me</b>: hi
+[2025-09-12 22:30:39] <b>Peer</b>: hello
+[2025-09-12 22:30:42] <b>System</b>: Socket disconnected
