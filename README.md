@@ -126,6 +126,17 @@ Look for an address like `192.168.x.x` or `10.x.x.x`.
 
 ---
 
+## 📸 Demonstration
+
+Below is a sample screenshot of **SafeTalk** in action:
+
+![Chat Example](chat_ex.png)
+
+This image shows two peers exchanging encrypted messages using the Qt-based interface.
+
+
+---
+
 ## 📜 License
 
 MIT License. Free to use and modify.  
