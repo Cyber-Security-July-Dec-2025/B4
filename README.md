@@ -24,7 +24,7 @@ On Debian/Ubuntu:
 
 ```bash
 sudo apt update
-sudo apt install -y build-essential cmake qtbase5-dev libcrypto++-dev
+sudo apt install -y build-essential cmake qt6-base-dev qt6-base-dev-tools libcrypto++-dev
 ```
 
 ---
