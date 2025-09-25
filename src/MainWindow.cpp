@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent),
     mainL->addLayout(hb);
     w->setLayout(mainL);
     setCentralWidget(w);
-    setWindowTitle("Secure Chat (Qt + Crypto++)");
+    setWindowTitle("SafeTalk (Qt + Crypto++)");
 
     connect(m_connectBtn, &QPushButton::clicked, this, &MainWindow::onConnectClicked);
     connect(m_sendBtn, &QPushButton::clicked, this, &MainWindow::onSendClicked);
