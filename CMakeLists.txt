@@ -1,6 +1,6 @@
 
 cmake_minimum_required(VERSION 3.16)
-project(SecureChat LANGUAGES CXX)
+project(SafeTalk LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -73,19 +73,19 @@ set(HEADERS
   src/CryptoHelper.h
 )
 
-add_executable(securechat ${SOURCES} ${HEADERS})
+add_executable(safetalk ${SOURCES} ${HEADERS})
 
-target_include_directories(securechat PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(safetalk PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Link Qt modules and Crypto++ library
 if(TARGET Qt6::Widgets AND TARGET Qt6::Network)
-  target_link_libraries(securechat PRIVATE Qt6::Widgets Qt6::Network)
+  target_link_libraries(safetalk PRIVATE Qt6::Widgets Qt6::Network)
 else()
   message(FATAL_ERROR "Qt6 Widgets/Network not found. Make sure CMAKE_PREFIX_PATH points to your Qt install (e.g. -DCMAKE_PREFIX_PATH=$(brew --prefix qt)/lib/cmake).")
 endif()
 
 if(CRYPTOPP_LIBRARY)
-  target_link_libraries(securechat PRIVATE ${CRYPTOPP_LIBRARY})
+  target_link_libraries(safetalk PRIVATE ${CRYPTOPP_LIBRARY})
 else()
   message(WARNING "Proceeding without linking Crypto++ library; build will fail if Crypto++ symbols are needed.")
 endif()
