@@ -48,7 +48,7 @@ chmod +x rebuild.sh
 ./rebuild.sh 
 ```
 
-If the build succeeds you should have a binary such as `build/securechat`.
+If the build succeeds you should have a binary such as `build/safetalk`.
 
 ### 3) Prepare keys for each run folder
 
@@ -65,7 +65,7 @@ cp -r ~/B4/keys/run-B/* ~/B4/run-B/keys/
 ### 4) Make sure required files are executable
 
 ```bash
-chmod +x build/securechat || true
+chmod +x build/safetalk || true
 chmod +x run-A/start.sh run-B/start.sh || true
 ```
 
@@ -85,7 +85,7 @@ cd ~/B4/run-B
 bash start.sh
 ```
 
-If `start.sh` expects to be run from the run folder (it usually does), `cd` into the folder first so the `./securechat` path resolves correctly.
+If `start.sh` expects to be run from the run folder (it usually does), `cd` into the folder first so the `./safetalk` path resolves correctly.
 
 ### 6) Alternative: run the built binary directly
 
@@ -96,7 +96,7 @@ Terminal 1 (A):
 ```bash
 cd ~/B4/run-A
 export QT_QPA_PLATFORM=xcb       # GUI helper for some setups
-../build/securechat --config config.json
+../build/safetalk --config config.json
 ```
 
 Terminal 2 (B):
@@ -104,7 +104,7 @@ Terminal 2 (B):
 ```bash
 cd ~/B4/run-B
 export QT_QPA_PLATFORM=xcb
-../build/securechat --config config.json
+../build/safetalk --config config.json
 ```
 
 Replace `--config config.json` with the correct CLI form if your binary uses a different flag.
@@ -159,8 +159,8 @@ Look for an address like `192.168.x.x` or `10.x.x.x`.
 
 ## 🔧 Troubleshooting (quick)
 
-- **`Permission denied` when running `./securechat`**
-  - Ensure the binary is executable: `chmod +x build/securechat` (or `../build/securechat` from run folder).
+- **`Permission denied` when running `./safetalk`**
+  - Ensure the binary is executable: `chmod +x build/safetalk` (or `../build/safetalk` from run folder).
   - If repo is on a mounted Windows/OneDrive/SMB share, that mount may have `noexec` — move the project to a native Linux filesystem or remount with `exec`.
   - If the `file` command shows a Windows PE file, you built the wrong target (build on Linux).
 
