@@ -36,11 +36,11 @@ mkdir -p "$RUN_A/keys" "$RUN_B/keys"
 
 # NOTE: you said you already have .der keys in run-A and run-B;
 # if you do, this next block will NOT overwrite them. It copies if a top-level keys/ exists.
-if [ -d "$PROJECT_DIR/keys" ]; then
-  echo "==> Copying top-level keys/ into run folders (only if present)"
-  cp -r "$PROJECT_DIR/keys/." "$RUN_A/keys/" || true
-  cp -r "$PROJECT_DIR/keys/." "$RUN_B/keys/" || true
-fi
+# if [ -d "$PROJECT_DIR/keys" ]; then
+#   echo "==> Copying top-level keys/ into run folders (only if present)"
+#   cp -r "$PROJECT_DIR/keys/." "$RUN_A/keys/" || true
+#   cp -r "$PROJECT_DIR/keys/." "$RUN_B/keys/" || true
+# fi
 
 # 4) Copy the binary and styles
 echo "==> Copying binary to run folders..."
