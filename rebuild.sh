@@ -22,7 +22,7 @@ echo "==> Building (make -j$(nproc))..."
 make -j"$(nproc)"
 
 # 2) Verify binary
-BINARY="$BUILD_DIR/securechat"
+BINARY="$BUILD_DIR/safetalk"
 if [ ! -x "$BINARY" ]; then
   echo "ERROR: built binary not found or not executable: $BINARY"
   exit 2
@@ -46,7 +46,7 @@ mkdir -p "$RUN_A/keys" "$RUN_B/keys"
 echo "==> Copying binary to run folders..."
 cp "$BINARY" "$RUN_A/"
 cp "$BINARY" "$RUN_B/"
-chmod +x "$RUN_A/securechat" "$RUN_B/securechat"
+chmod +x "$RUN_A/safetalk" "$RUN_B/safetalk"
 
 # Copy styles if present
 if [ -d "$PROJECT_DIR/styles" ]; then
@@ -68,13 +68,13 @@ cat > "$RUN_A/start.sh" <<'SH'
 #!/usr/bin/env bash
 cd "$(dirname "$0")"
 export QT_QPA_PLATFORM=xcb
-./securechat
+./safetalk
 SH
 cat > "$RUN_B/start.sh" <<'SH'
 #!/usr/bin/env bash
 cd "$(dirname "$0")"
 export QT_QPA_PLATFORM=xcb
-./securechat
+./safetalk
 SH
 chmod +x "$RUN_A/start.sh" "$RUN_B/start.sh"
 
