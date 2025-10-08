@@ -16,27 +16,27 @@ mkdir -p "$BUILD_DIR"
 cd "$BUILD_DIR"
 
 echo "==> Running cmake..."
-cmake ..           # add -D flags here if needed
+cmake .. # add -D flags here if needed
 
 echo "==> Building all targets (make -j$(nproc))..."
 make -j"$(nproc)"
 
 # 2) Verify binary
 BINARY="$BUILD_DIR/safetalk"
-KEYGEN_BINARY="$BUILD_DIR/keygen" # <-- ADD THIS LINE
-if [ ! -x "$BINARY" ] || [ ! -x "$KEYGEN_BINARY" ]; then # <-- MODIFY THIS LINE
-  echo "ERROR: A required binary was not found or not executable." # <-- MODIFY THIS LINE
+KEYGEN_BINARY="$BUILD_DIR/keygen"
+if [ ! -x "$BINARY" ] || [ ! -x "$KEYGEN_BINARY" ]; then
+  echo "ERROR: A required binary was not found or not executable."
   exit 2
 fi
-echo "==> Build successful: $BINARY and $KEYGEN_BINARY" # <-- MODIFY THIS LINE
+echo "==> Build successful: $BINARY and $KEYGEN_BINARY"
 
-# 3) Generate and organize keys <-- ENTIRE NEW SECTION
+# 3) Generate and organize keys
 echo "==> Generating keys for both instances..."
 rm -rf "$PROJECT_DIR/keys_temp" # Clean old temp keys
 mkdir -p "$PROJECT_DIR/keys_temp/run-A" "$PROJECT_DIR/keys_temp/run-B"
 
 # Create the 'keys' directory before running keygen
-mkdir -p keys # <-- FIX IS HERE
+mkdir -p keys
 
 # Generate keys for run-A
 "$KEYGEN_BINARY"
@@ -49,9 +49,13 @@ mv keys/my_private.der "$PROJECT_DIR/keys_temp/run-B/my_private.der"
 mv keys/my_public.der "$PROJECT_DIR/keys_temp/run-B/my_public.der"
 rmdir keys # remove empty directory created by keygen
 
-# Create peer keys (run-A gets run-B's public, run-B gets run-A's public)
-cp "$PROJECT_DIR/keys_temp/run-B/my_public.der" "$PROJECT_DIR/keys_temp/run-A/peer_public.der"
-cp "$PROJECT_DIR/keys_temp/run-A/my_public.der" "$PROJECT_DIR/keys_temp/run-B/peer_public.der"
+# --- MODIFIED SECTION ---
+# Create peer keys using rsync with user@localhost to simulate network transfer
+# echo "==> Transferring public keys using rsync (network mode)..."
+# rsync "$PROJECT_DIR/keys_temp/run-B/my_public.der" "$USER@localhost:$PROJECT_DIR/keys_temp/run-A/peer_public.der"
+# rsync "$PROJECT_DIR/keys_temp/run-A/my_public.der" "$USER@localhost:$PROJECT_DIR/keys_temp/run-B/peer_public.der"
+# --- END MODIFIED SECTION ---
+
 
 # 4) Prepare run folders
 echo "==> Preparing run folders..."
@@ -62,6 +66,8 @@ echo "==> Copying generated keys into run folders..."
 cp -r "$PROJECT_DIR/keys_temp/run-A/." "$RUN_A/keys/"
 cp -r "$PROJECT_DIR/keys_temp/run-B/." "$RUN_B/keys/"
 rm -rf "$PROJECT_DIR/keys_temp" # Clean up temp key directory
+
+mkdir -p "$RUN_A/keys/rcvd_key" "$RUN_B/keys/rcvd_key"
 
 # 5) Copy the binary and styles
 echo "==> Copying binary to run folders..."
@@ -103,3 +109,4 @@ echo "==> Deploy done."
 echo "Run the two instances in separate terminals:"
 echo "  Terminal 1: cd $RUN_A && ./start.sh"
 echo "  Terminal 2: cd $RUN_B && ./start.sh"
+
