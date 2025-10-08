@@ -8,7 +8,7 @@
 using namespace CryptoPP;
 
 int main(int argc, char* argv[]) {
-    unsigned int keyBits = 4096;
+    unsigned int keyBits = 2048;
     if (argc > 1) keyBits = static_cast<unsigned int>(std::atoi(argv[1]));
 
     AutoSeededRandomPool rng;
