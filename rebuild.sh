@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Path vars (change if your project root differs)
-PROJECT_DIR="$HOME/B4.1"
+PROJECT_DIR="$HOME/B4"
 BUILD_DIR="$PROJECT_DIR/build"
 RUN_A="$PROJECT_DIR/run-A"
 RUN_B="$PROJECT_DIR/run-B"
@@ -35,7 +34,6 @@ echo "==> Generating keys for both instances..."
 rm -rf "$PROJECT_DIR/keys_temp" # Clean old temp keys
 mkdir -p "$PROJECT_DIR/keys_temp/run-A" "$PROJECT_DIR/keys_temp/run-B"
 
-# Create the 'keys' directory before running keygen
 mkdir -p keys
 
 # Generate keys for run-A
@@ -48,14 +46,6 @@ mv keys/my_public.der "$PROJECT_DIR/keys_temp/run-A/my_public.der"
 mv keys/my_private.der "$PROJECT_DIR/keys_temp/run-B/my_private.der"
 mv keys/my_public.der "$PROJECT_DIR/keys_temp/run-B/my_public.der"
 rmdir keys # remove empty directory created by keygen
-
-# --- MODIFIED SECTION ---
-# Create peer keys using rsync with user@localhost to simulate network transfer
-# echo "==> Transferring public keys using rsync (network mode)..."
-# rsync "$PROJECT_DIR/keys_temp/run-B/my_public.der" "$USER@localhost:$PROJECT_DIR/keys_temp/run-A/peer_public.der"
-# rsync "$PROJECT_DIR/keys_temp/run-A/my_public.der" "$USER@localhost:$PROJECT_DIR/keys_temp/run-B/peer_public.der"
-# --- END MODIFIED SECTION ---
-
 
 # 4) Prepare run folders
 echo "==> Preparing run folders..."

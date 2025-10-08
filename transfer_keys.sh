@@ -16,11 +16,11 @@ PEER_IP="10.48.102.50"
 
 # Path vars
 if [ "$INSTANCE_ID" = "A" ]; then
-    RUN_DIR="$HOME/B4.1/run-A"
+    RUN_DIR="$HOME/B4/run-A"
     PEER_RUN_DIR="$HOME/B4/run-B"
 else
     RUN_DIR="$HOME/B4/run-B"
-    PEER_RUN_DIR="$HOME/B4.1/run-A"
+    PEER_RUN_DIR="$HOME/B4/run-A"
 fi
 
 MY_PUBLIC_KEY="$RUN_DIR/keys/my_public.der"
