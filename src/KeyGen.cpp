@@ -16,8 +16,8 @@ int main(int argc, char* argv[]) {
     priv.GenerateRandomWithKeySize(rng, keyBits);
     RSA::PublicKey pub(priv);
 
-    const char* privPath = "keys/my_private.key";
-    const char* pubPath  = "keys/my_public.key";
+    const char* privPath = "keys/my_private.der";
+    const char* pubPath  = "keys/my_public.der";
 
     // write DER encoded keys
     try {

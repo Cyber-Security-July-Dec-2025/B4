@@ -1,7 +1,7 @@
 {
-  "listen_ip": "127.0.0.1",
+  "listen_ip": "10.48.102.102 ",
   "listen_port": 9001,
-  "peer_ip": "127.0.0.1",
+  "peer_ip": "10.48.102.50",
   "peer_port": 9002,
   "my_private_key": "keys/my_private.der",
   "my_public_key": "keys/my_public.der",

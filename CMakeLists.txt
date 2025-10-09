@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Enable automoc/autouic so Qt meta-object code and ui files are handled automatically.
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
+# set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Find Qt (Widgets + Network)
@@ -88,4 +88,11 @@ if(CRYPTOPP_LIBRARY)
   target_link_libraries(safetalk PRIVATE ${CRYPTOPP_LIBRARY})
 else()
   message(WARNING "Proceeding without linking Crypto++ library; build will fail if Crypto++ symbols are needed.")
+endif()
+
+add_executable(keygen src/KeyGen.cpp)
+
+# Link Crypto++ to the keygen utility
+if(CRYPTOPP_LIBRARY)
+  target_link_libraries(keygen PRIVATE ${CRYPTOPP_LIBRARY})
 endif()

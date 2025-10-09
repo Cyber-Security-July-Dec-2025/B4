@@ -1,4 +1,0 @@
-/home/rahul/B4/build/CMakeFiles/securechat.dir
-/home/rahul/B4/build/CMakeFiles/edit_cache.dir
-/home/rahul/B4/build/CMakeFiles/rebuild_cache.dir
-/home/rahul/B4/build/CMakeFiles/securechat_autogen.dir
