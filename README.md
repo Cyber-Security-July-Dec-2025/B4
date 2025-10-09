@@ -1,119 +1,136 @@
 # 🛡️ SafeTalk
 
-**SafeTalk** — a lightweight end-to-end encrypted chat application built with **Qt** and **Crypto++**.
+**SafeTalk** — a lightweight **end-to-end encrypted chat application** built with **Qt** and **Crypto++**.
 
-- **Crypto:** RSA (key exchange) + AES‑GCM (message confidentiality & integrity)
-- **Transport:** TCP sockets (peer‑to‑peer, LAN)
-- **UI:** Qt GUI
-- **Platform:** Linux (Ubuntu/Debian tested)
+> **Crypto:** RSA (key exchange) + AES-GCM (message confidentiality & integrity)  
+> **Transport:** TCP sockets (peer-to-peer, LAN)  
+> **UI:** Qt GUI  
+> **Platform:** Linux (Ubuntu/Debian tested)
 
 ---
 
 ## ✨ Highlights
 
-- 🔐 E2E encryption using RSA + AES‑GCM
-- ⚡ Small, Qt-based GUI for quick testing
-- 🌍 Peer-to-peer over LAN; easy JSON-based configuration
-- 🐧 Built with standard Linux toolchain (cmake, GNU toolchain)
+- 🔐 **E2E encryption** using RSA + AES-GCM  
+- ⚡ **Lightweight Qt-based GUI** for testing  
+- 🌍 **Peer-to-peer over LAN** with JSON configuration  
+- 🧱 **Built with standard Linux toolchain (CMake, GNU)**  
 
 ---
 
 ## 📦 Prerequisites
 
-On Debian/Ubuntu:
+**On Debian/Ubuntu:**
 
 ```bash
 sudo apt update
-sudo apt install -y build-essential cmake qt6-base-dev qt6-base-dev-tools libcrypto++-dev
+sudo apt install -y build-essential cmake qt6-base-dev qt6-base-dev-tools libcrypto++-dev openssh-server
 ```
+
+> **Note:** For key exchange between two devices, both computers must have the SSH server running.  
+> Start it with:
+> ```bash
+> sudo systemctl start ssh
+> ```
 
 ---
 
 ## 🚀 Build & Run
 
-Follow these steps — this is a single, reliable flow that builds the project, prepares keys, and runs two instances (A and B).
+This guide covers setting up two instances on two separate devices (**Device A** and **Device B**).
 
-### 1) Clone the repo
+### 1️⃣ Clone the Repository (on both devices)
 
 ```bash
 git clone https://github.com/Cyber-Security-July-Dec-2025/B4.git ~/B4
 cd ~/B4
 ```
 
-### 2) Build (clean, reproducible)
+---
+
+### 2️⃣ Build the Software (on both devices)
+
+The `rebuild.sh` script compiles the application, generates RSA keys, and prepares run folders.
 
 ```bash
-# make scripts executable and run the rebuild script
 chmod +x rebuild.sh
-./rebuild.sh 
+./rebuild.sh
 ```
 
-If the build succeeds you should have a binary such as `build/safetalk`.
+If the build succeeds, you will have:
 
-### 3) Prepare keys for each run folder
+- `build/safetalk` → compiled binary  
+- `run-A/` and `run-B/` → preconfigured run folders
 
-```bash
-# populate run-A keys
-cp -r ~/B4/keys/run-A/* ~/B4/run-A/keys/
+---
 
-# populate run-B keys
-cp -r ~/B4/keys/run-B/* ~/B4/run-B/keys/
-```
+### 3️⃣ Exchange Public Keys (between devices)
 
-> Note: The repository README previously duplicated the `run-A` copy — the commands above copy the correct key sets to each run folder.
+You’ll use the provided `transfer_keys.sh` script.
 
-### 4) Make sure required files are executable
+#### Steps:
 
-```bash
-chmod +x build/safetalk || true
-chmod +x run-A/start.sh run-B/start.sh || true
-```
+1. **Make the transfer script executable**
+   ```bash
+   chmod +x transfer_keys.sh
+   ```
 
-### 5) Start the two instances (two terminals)
+2. **On Device A**
+   - Open `transfer_keys.sh`
+   - Set:
+     ```bash
+     INSTANCE_ID="A"
+     PEER_USER="<username_on_B>"
+     PEER_IP="<ip_of_device_B>"
+     ```
+   - Run:
+     ```bash
+     ./transfer_keys.sh
+     ```
 
-Open **two terminals**. In Terminal 1:
+3. **On Device B**
+   - Open `transfer_keys.sh`
+   - Set:
+     ```bash
+     INSTANCE_ID="B"
+     PEER_USER="<username_on_A>"
+     PEER_IP="<ip_of_device_A>"
+     ```
+   - Run:
+     ```bash
+     ./transfer_keys.sh
+     ```
 
+4. **On Device A (final run)**
+   - Run again:
+     ```bash
+     ./transfer_keys.sh
+     ```
+
+✅ Key exchange is now complete!
+
+---
+
+### 4️⃣ Start SafeTalk (on both devices)
+
+**Device A**
 ```bash
 cd ~/B4/run-A
 bash start.sh
 ```
 
-In Terminal 2:
-
+**Device B**
 ```bash
 cd ~/B4/run-B
 bash start.sh
 ```
 
-If `start.sh` expects to be run from the run folder (it usually does), `cd` into the folder first so the `./safetalk` path resolves correctly.
-
-### 6) Alternative: run the built binary directly
-
-If `start.sh` fails, run the binary and point it at the config in each run folder:
-
-Terminal 1 (A):
-
-```bash
-cd ~/B4/run-A
-export QT_QPA_PLATFORM=xcb       # GUI helper for some setups
-../build/safetalk --config config.json
-```
-
-Terminal 2 (B):
-
-```bash
-cd ~/B4/run-B
-export QT_QPA_PLATFORM=xcb
-../build/safetalk --config config.json
-```
-
-Replace `--config config.json` with the correct CLI form if your binary uses a different flag.
+Make sure `config.json` in each run folder is updated with the correct IPs and ports.
 
 ---
 
 ## ⚙️ Example `config.json`
 
-Each run folder (`run-A`, `run-B`) contains a `config.json` file. Example:
 ```json
 {
   "listen_ip": "127.0.0.1",
@@ -129,67 +146,262 @@ Each run folder (`run-A`, `run-B`) contains a `config.json` file. Example:
 }
 ```
 
-**Tips:**
-- `my_private_key` → Your private RSA key.  
-- `my_public_key` → Your public RSA key.  
-- `peer_public_key` → The peer’s public key.  
-- Use `127.0.0.1` (loopback) to run both instances on the same machine for testing.
-- Use LAN IPs (e.g., `192.168.x.x`) if running across different machines on the same network.
-- `listen_ip` is often `0.0.0.0` for listening on all interfaces; set it to `127.0.0.1` for local-only testing.
+### 🧩 Notes
+
+- `my_private_key` → Your private RSA key  
+- `my_public_key` → Your public RSA key  
+- `peer_public_key` → The peer’s public key  
+- Use `127.0.0.1` (loopback) for same-machine testing  
+- Use your **LAN IPs (e.g., 192.168.x.x)** for cross-device chat  
+- Set `listen_ip` to `0.0.0.0` for all interfaces (LAN access)
 
 ---
 
 ## 🌐 Finding Your LAN IP
 
-On Linux:
-
 ```bash
 hostname -I
-```
-
-or
-
-```bash
+# or
 ip addr show
 ```
 
-Look for an address like `192.168.x.x` or `10.x.x.x`.  
+Look for an address like **192.168.x.x** or **10.x.x.x**.
 
 ---
 
-## 🔧 Troubleshooting (quick)
+## 🔧 Troubleshooting
 
-- **`Permission denied` when running `./safetalk`**
-  - Ensure the binary is executable: `chmod +x build/safetalk` (or `../build/safetalk` from run folder).
-  - If repo is on a mounted Windows/OneDrive/SMB share, that mount may have `noexec` — move the project to a native Linux filesystem or remount with `exec`.
-  - If the `file` command shows a Windows PE file, you built the wrong target (build on Linux).
+| Issue | Possible Fix |
+|-------|---------------|
+| **Permission denied when running ./safetalk** | Run `chmod +x build/safetalk` |
+| **Running from network share fails** | Move project to native Linux# 🛡️ SafeTalk
 
-- **`failed to open config.json`**
-  - Ensure `config.json` exists in the run folder and the binary is pointed at it.
+**SafeTalk** — a lightweight **end-to-end encrypted chat application** built with **Qt** and **Crypto++**.
 
-- **GUI not showing or crashes**
-  - Make sure Qt is installed; set `QT_QPA_PLATFORM=xcb` if needed.
+> **Crypto:** RSA (key exchange) + AES-GCM (message confidentiality & integrity)  
+> **Transport:** TCP sockets (peer-to-peer, LAN)  
+> **UI:** Qt GUI  
+> **Platform:** Linux (Ubuntu/Debian tested)
 
-- **Instances don’t connect**
-  - Check `peer_ip` / `peer_port` in each `config.json`.
-  - Ensure firewall allows the ports: `sudo ufw allow <port>`.
+---
+
+## ✨ Highlights
+
+- 🔐 **E2E encryption** using RSA + AES-GCM  
+- ⚡ **Lightweight Qt-based GUI** for testing  
+- 🌍 **Peer-to-peer over LAN** with JSON configuration  
+- 🧱 **Built with standard Linux toolchain (CMake, GNU)**  
+
+---
+
+## 📦 Prerequisites
+
+**On Debian/Ubuntu:**
+
+```bash
+sudo apt update
+sudo apt install -y build-essential cmake qt6-base-dev qt6-base-dev-tools libcrypto++-dev openssh-server
+```
+
+> **Note:** For key exchange between two devices, both computers must have the SSH server running.  
+> Start it with:
+> ```bash
+> sudo systemctl start ssh
+> ```
+
+---
+
+## 🚀 Build & Run
+
+This guide covers setting up two instances on two separate devices (**Device A** and **Device B**).
+
+### 1️⃣ Clone the Repository (on both devices)
+
+```bash
+git clone https://github.com/Cyber-Security-July-Dec-2025/B4.git ~/B4
+cd ~/B4
+```
+
+---
+
+### 2️⃣ Build the Software (on both devices)
+
+The `rebuild.sh` script compiles the application, generates RSA keys, and prepares run folders.
+
+```bash
+chmod +x rebuild.sh
+./rebuild.sh
+```
+
+If the build succeeds, you will have:
+
+- `build/safetalk` → compiled binary  
+- `run-A/` and `run-B/` → preconfigured run folders
+
+---
+
+### 3️⃣ Exchange Public Keys (between devices)
+
+You’ll use the provided `transfer_keys.sh` script.
+
+#### Steps:
+
+1. **Make the transfer script executable**
+   ```bash
+   chmod +x transfer_keys.sh
+   ```
+
+2. **On Device A**
+   - Open `transfer_keys.sh`
+   - Set:
+     ```bash
+     INSTANCE_ID="A"
+     PEER_USER="<username_on_B>"
+     PEER_IP="<ip_of_device_B>"
+     ```
+   - Run:
+     ```bash
+     ./transfer_keys.sh
+     ```
+
+3. **On Device B**
+   - Open `transfer_keys.sh`
+   - Set:
+     ```bash
+     INSTANCE_ID="B"
+     PEER_USER="<username_on_A>"
+     PEER_IP="<ip_of_device_A>"
+     ```
+   - Run:
+     ```bash
+     ./transfer_keys.sh
+     ```
+
+4. **On Device A (final run)**
+   - Run again:
+     ```bash
+     ./transfer_keys.sh
+     ```
+
+✅ Key exchange is now complete!
+
+---
+
+### 4️⃣ Start SafeTalk (on both devices)
+
+**Device A**
+```bash
+cd ~/B4/run-A
+bash start.sh
+```
+
+**Device B**
+```bash
+cd ~/B4/run-B
+bash start.sh
+```
+
+Make sure `config.json` in each run folder is updated with the correct IPs and ports.
+
+---
+
+## ⚙️ Example `config.json`
+
+```json
+{
+  "listen_ip": "127.0.0.1",
+  "listen_port": 9001,
+  "peer_ip": "127.0.0.1",
+  "peer_port": 9002,
+  "my_private_key": "keys/my_private.der",
+  "my_public_key": "keys/my_public.der",
+  "peer_public_key": "keys/peer_public.der",
+  "rsa_bits": 2048,
+  "aes_key_bytes": 32,
+  "aes_iv_bytes": 12
+}
+```
+
+### 🧩 Notes
+
+- `my_private_key` → Your private RSA key  
+- `my_public_key` → Your public RSA key  
+- `peer_public_key` → The peer’s public key  
+- Use `127.0.0.1` (loopback) for same-machine testing  
+- Use your **LAN IPs (e.g., 192.168.x.x)** for cross-device chat  
+- Set `listen_ip` to `0.0.0.0` for all interfaces (LAN access)
+
+---
+
+## 🌐 Finding Your LAN IP
+
+```bash
+hostname -I
+# or
+ip addr show
+```
+
+Look for an address like **192.168.x.x** or **10.x.x.x**.
+
+---
+
+## 🔧 Troubleshooting
+
+| Issue | Possible Fix |
+|-------|---------------|
+| **Permission denied when running ./safetalk** | Run `chmod +x build/safetalk` |
+| **Running from network share fails** | Move project to native Linux filesystem |
+| **Missing config.json** | Ensure file exists in `run-A` / `run-B` |
+| **Qt GUI not showing** | Verify Qt installation; try `export QT_QPA_PLATFORM=xcb` |
+| **Instances not connecting** | Check `peer_ip`/`peer_port` and firewall (`sudo ufw allow <port>`) |
 
 ---
 
 ## 📸 Demonstration
 
-Below is a sample screenshot of **SafeTalk** in action:
+Below is a sample screenshot of SafeTalk in action:
 
-![Chat Example](chat_ex.png)
-
-This image shows two peers exchanging encrypted messages using the Qt-based interface.
+> Two peers exchanging encrypted messages using the Qt-based interface.
 
 ---
 
 ## 📄 License
 
-MIT License — free to use and modify.
+**MIT License** — free to use, modify, and distribute.
 
 ---
 
+### 🧠 Credits
 
+Developed as part of the **Cyber Security — July–Dec 2025** project.
+
+---
+
+**Enjoy secure chatting with SafeTalk!** 🛡️💬 filesystem |
+| **Missing config.json** | Ensure file exists in `run-A` / `run-B` |
+| **Qt GUI not showing** | Verify Qt installation; try `export QT_QPA_PLATFORM=xcb` |
+| **Instances not connecting** | Check `peer_ip`/`peer_port` and firewall (`sudo ufw allow <port>`) |
+
+---
+
+## 📸 Demonstration
+
+Below is a sample screenshot of SafeTalk in action:
+
+> Two peers exchanging encrypted messages using the Qt-based interface.
+
+---
+
+## 📄 License
+
+**MIT License** — free to use, modify, and distribute.
+
+---
+
+### 🧠 Credits
+
+Developed as part of the **Cyber Security — July–Dec 2025** project.
+
+---
+
+**Enjoy secure chatting with SafeTalk!** 🛡️💬
